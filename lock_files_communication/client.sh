@@ -13,4 +13,5 @@ while [ -e clientTry ]; do # If Client couldn't create the lockfile:
     echo ">$ Waiting for server..."
 done
 
-echo "$input" > serverBuff.txt # If Client created lockfile
+pid=$$
+echo -e "${pid}buff\n$input\E" > serverBuff.txt # If Client created lockfile

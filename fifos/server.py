@@ -36,20 +36,18 @@ _ = os.open(server_queue, os.O_WRONLY|os.O_NDELAY) # do not end queue on no one 
 
 while True:
     try:
-        _ = os.read(input_queue, 5)
-        length = int(os.read(input_queue, 2).decode())
-        message = os.read(input_queue, length).decode()
-        message_array = message.split(':')
+        message_length = int(os.read(input_queue, 2).decode())
+        message = os.read(input_queue, message_length).decode().split(':')
+        requested_id = int(message[0])
         
-        req_id = int(message_array[0])
-        if not req_id in data_base:
-            print('Cannot find data')
-            continue
+        if not requested_id in data_base:
+            error_message = 'Cannot find data'
+            output_data = str(len(error_message)) + error_message
+        else:
+            output_data = str(len(data_base[requested_id])) + data_base[requested_id]
         
-        output_data = '$msg?' + str(len(data_base[req_id])) + data_base[req_id]
-        output_queue = os.open(message_array[1], os.O_WRONLY)
+        output_queue = os.open(message[1], os.O_WRONLY)
         os.write(output_queue, output_data.encode())
-        continue
 
     except Exception:
         print(">! Cannot parse queue")

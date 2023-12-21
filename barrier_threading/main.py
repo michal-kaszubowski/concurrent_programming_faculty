@@ -72,7 +72,7 @@ def main():
     
     solutions_queue = os.open(solutions_queue_key, os.O_RDWR)
 
-    barrier = threading.Barrier(threads_amount)
+    barrier = threading.Barrier(threads_amount + 1)
 
     for i in range(0, len(partitons)):
         each = partitons[i]
